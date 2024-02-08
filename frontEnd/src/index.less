@@ -1,0 +1,34 @@
+:root {
+  --containerBgColor: #f5f5f5;
+  --elementBgColor: #fff;
+  --primaryColor: #45a164;
+  --selectedBgColor: var(var(--primaryColor));
+  --selectedTextColor: #fff;
+  --hoverBgColor: #45a1641e;
+  --hotColor: #ff4d4f;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.5;
+  color: #333;
+  background-color: var(--containerBgColor);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --svgColor: #808080;
+}
+#root {
+  height: 100%;
+}
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.1em; /* 因icon大小被设置为和字体大小一致，而span等标签的下边缘会和字体的基线对齐，故需设置一个往下的偏移比例，来纠正视觉上的未对齐效果 */
+  fill: var(--svgColor);
+  overflow: hidden; /* 防止svg的溢出 */
+}
+img {
+  width: 100%;
+  height: 100%;
+}

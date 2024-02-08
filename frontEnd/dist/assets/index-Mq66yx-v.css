@@ -1,0 +1,1 @@
+.layout{display:flex;flex-direction:column;height:100vh;box-sizing:border-box}.layout .layout-header{flex:0 0 60px;padding:0 24px;box-shadow:0 1px 4px #00152914;z-index:10}.layout .layout-content{flex:1;overflow:auto}

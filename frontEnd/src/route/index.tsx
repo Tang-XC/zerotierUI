@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { useRoutes, BrowserRouter } from 'react-router-dom';
+import { useRoutes, BrowserRouter, HashRouter } from 'react-router-dom';
 import BaseAlert from '@/components/BaseAlert';
 import { useMessage } from '@/contexts/messageContext';
 import { useAuth } from '@/contexts/authContext';
@@ -17,7 +17,7 @@ const Router: FC = () => {
     getUserInfo();
   }, []);
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div
         style={{
           position: 'fixed',
@@ -29,7 +29,7 @@ const Router: FC = () => {
         <BaseAlert {...state} isCount={false} />
       </div>
       <Route />
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 export default Router;

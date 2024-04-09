@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"gorm.io/gorm"
 	"shop/pkg/model"
 )
@@ -21,7 +20,6 @@ func (s *systemRepository) GetSystem(system *model.System) (*model.System, error
 }
 
 func (s *systemRepository) UpdateSystem(system *model.System) (*model.System, error) {
-	fmt.Println(system)
 	if err := s.db.Model(system).Updates(system).Error; err != nil {
 		return nil, err
 	}

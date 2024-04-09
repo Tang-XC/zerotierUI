@@ -15,7 +15,7 @@ import {
   Typography,
   IconButton,
 } from '@mui/material';
-import { Table } from '@/components';
+import { ZTTable } from '@/components';
 import { useForm, Controller } from 'react-hook-form';
 import withAuth from '@/hocs/withAuth';
 import {
@@ -289,7 +289,7 @@ const Users: FC = () => {
   }, []);
   return (
     <>
-      <Table
+      <ZTTable
         actionRef={actionRef}
         columns={columns}
         request={getData}

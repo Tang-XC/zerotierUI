@@ -1,11 +1,10 @@
-import { FC, useState, useRef, useMemo } from 'react';
+import { FC, useState, useRef, useMemo, useEffect } from 'react';
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
-  MenuItem,
   TextField,
   Button,
   Box,
@@ -19,8 +18,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 
-import { Table } from '@/components';
+import { ZTTable } from '@/components';
 import { hostedNetworks, CreateNetworks, deleteNetwork } from '@/api/zerotier';
+import { getSystem } from '@/api/system';
 import { useForm, Controller } from 'react-hook-form';
 import { useMessage } from '@/contexts/messageContext';
 import { useNavigate } from 'react-router-dom';
@@ -92,7 +92,11 @@ const Index: FC = () => {
                 disabled={!state.permissions.includes('network-detail')}
                 onClick={() => {
                   setCurrentId(record.id);
-                  navigate('/network/' + record.id);
+                  navigate('/network/detail', {
+                    state: {
+                      id: record.id,
+                    },
+                  });
                 }}>
                 <InfoIcon
                   sx={{
@@ -194,7 +198,6 @@ const Index: FC = () => {
     }
   };
   const getData = async (params: any) => {
-    console.log(params);
     const result = await hostedNetworks({
       ...params,
     });
@@ -206,6 +209,15 @@ const Index: FC = () => {
     return {
       data: [],
     };
+  };
+  const getMaxMember = async () => {
+    const result = await getSystem();
+    if (result.code === 200) {
+      reset({
+        ...defaultValues,
+        max_memberships: result.data.max_member,
+      });
+    }
   };
   const onCreate = () => {
     setActionType(0);
@@ -224,9 +236,12 @@ const Index: FC = () => {
       actionRef.current?.reload();
     }
   };
+  useEffect(() => {
+    getMaxMember();
+  }, []);
   return (
     <>
-      <Table
+      <ZTTable
         actionRef={actionRef}
         columns={columns}
         params={{
@@ -263,27 +278,30 @@ const Index: FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <Controller
-                  name="max_memberships"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <TextField
-                      id={field.name}
-                      label="成员上限"
-                      type="number"
-                      required
-                      error={!!errors.max_memberships}
-                      helperText={
-                        errors.max_memberships ? '成员上限不能为空' : null
-                      }
-                      {...(fieldProps as any)}
-                      {...field}
-                    />
-                  )}
-                />
-              </Grid>
+              {state.roles.map((item) => item.id).includes(2) && (
+                <Grid item xs={12}>
+                  <Controller
+                    name="max_memberships"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <TextField
+                        id={field.name}
+                        label="成员上限"
+                        type="number"
+                        disabled={true}
+                        required
+                        error={!!errors.max_memberships}
+                        helperText={
+                          errors.max_memberships ? '成员上限不能为空' : null
+                        }
+                        {...(fieldProps as any)}
+                        {...field}
+                      />
+                    )}
+                  />
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <Controller
                   name="desc"

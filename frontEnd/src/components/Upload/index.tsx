@@ -34,6 +34,8 @@ interface UploadProps {
   error?: boolean;
   helperText?: string;
   [key: string]: any;
+  max?: number;
+  titleDesc: string;
 }
 interface PictureCardFileListItemProp {
   children?: React.ReactNode;
@@ -124,6 +126,8 @@ const Upload: FC<UploadProps> = forwardRef((props: UploadProps, ref) => {
     onChange,
     error = false,
     helperText,
+    max = Infinity,
+    titleDesc = '点击上传',
     ...other
   } = props;
   const [fileListState, setFileListState] = useState<fileListItem[]>(value);
@@ -234,19 +238,31 @@ const Upload: FC<UploadProps> = forwardRef((props: UploadProps, ref) => {
                 </PictureCardFileListItem>
               );
             })}
-            <PictureCardFileListItem error={error}>
-              <IconButton component="label">
-                {children}
-                <VisuallyHiddenInput
-                  ref={ref as React.MutableRefObject<HTMLInputElement>}
-                  type="file"
-                  multiple={multiple}
-                  onChange={handleChange.bind(this)}
-                  value={''}
-                  {...other}
-                />
-              </IconButton>
-            </PictureCardFileListItem>
+            {(max === Infinity || max > fileListState.length) && (
+              <PictureCardFileListItem error={error}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: '#707070',
+                  }}>
+                  <IconButton component="label">
+                    {children}
+                    <VisuallyHiddenInput
+                      ref={ref as React.MutableRefObject<HTMLInputElement>}
+                      type="file"
+                      multiple={multiple}
+                      onChange={handleChange.bind(this)}
+                      value={''}
+                      {...other}
+                    />
+                  </IconButton>
+                  <div>{titleDesc}</div>
+                </Box>
+              </PictureCardFileListItem>
+            )}
           </PictureCardFileListWrapper>
         )}
         <FormHelperText>{helperText}</FormHelperText>

@@ -1,8 +1,24 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Box, Typography, Button, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useCustom } from '@/contexts/customContext';
+import { useAuth } from '@/contexts/authContext';
+
+import { getDownLinks } from '@/api/system';
 const Home: FC = () => {
   const navigate = useNavigate();
+  const { state } = useCustom();
+  const { state: authState } = useAuth();
+  const [links, setLinks] = useState([]);
+  const getData = async () => {
+    const result = await getDownLinks();
+    if (result.code === 200) {
+      setLinks(result.data);
+    }
+  };
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <Box
       sx={{
@@ -10,30 +26,45 @@ const Home: FC = () => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: 'calc(100vh - 112px)',
+        height: '100%',
       }}>
-      <Typography variant="h1">翼信捷</Typography>
-      <Typography variant="h3">SD-LAN控制中心</Typography>
-      <Box
-        sx={{
-          mt: 4,
-          display: 'flex',
-        }}>
-        <Button onClick={() => navigate('/network')} LinkComponent={'a'}>
-          网络列表
-        </Button>
-        <Divider orientation="vertical" sx={{ mx: 2 }} />
-        <Button variant="contained" color="primary">
-          PLANET文件下载
-        </Button>
-        <Button
-          variant="outlined"
+      <Typography variant="h1">{state.system_name}</Typography>
+      <Typography variant="h3">{state.slogan}</Typography>
+      {links.length !== 0 ? (
+        <Box
           sx={{
-            ml: 2,
+            mt: 4,
+            display: 'flex',
           }}>
-          客户端下载
-        </Button>
-      </Box>
+          {links.map((item: any, index) => {
+            return (
+              <Button
+                sx={{ mr: 1, ml: 1 }}
+                variant="contained"
+                key={index}
+                onClick={() => {
+                  window.open(item.url);
+                }}>
+                <img
+                  style={{ width: '30px', height: '30px', marginRight: '8px' }}
+                  src={item.icon}
+                  alt={item.name}
+                />
+                {item.name}
+              </Button>
+            );
+          })}
+        </Box>
+      ) : (
+        <Box>
+          {authState.roles.map((item) => item.id).includes(2) && (
+            <div>
+              <span>暂无自定义链接内容,</span>
+              <Button onClick={() => navigate('/custom')}>现在去定义</Button>
+            </div>
+          )}
+        </Box>
+      )}
     </Box>
   );
 };

@@ -21,12 +21,12 @@ import {
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { Table } from '@/components';
+import { ZTTable } from '@/components';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import { useMessage } from '@/contexts/messageContext';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import {
   hostedNetworkDetail,
   getMembershipsList,
@@ -248,7 +248,8 @@ const Detail: FC = () => {
   ];
   const IpAssignmentRef = useRef<any>();
   const navigate = useNavigate();
-  const { id = '' } = useParams();
+  const location = useLocation();
+  const { id } = location.state;
   const { dispatch: dispatchMessage } = useMessage();
 
   const getDetail = async () => {
@@ -349,10 +350,11 @@ const Detail: FC = () => {
       });
       actionRef.current.reload();
       setIp('');
+      handleClose();
     }
   };
-  const DeleteMemberData = async (id: string) => {
-    const result = await DeleteMember(id);
+  const DeleteMemberData = async (memberId: string) => {
+    const result = await DeleteMember(id, memberId);
     if (result.code === 200) {
       window.location.reload();
       dispatchMessage({
@@ -519,7 +521,7 @@ const Detail: FC = () => {
         </Box>
         <Box>
           <TabPanel key={1} value={activeTab} index={1}>
-            <Table
+            <ZTTable
               actionRef={actionRef}
               columns={membersColumns}
               request={getMembers}

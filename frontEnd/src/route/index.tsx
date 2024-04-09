@@ -3,6 +3,7 @@ import { useRoutes, BrowserRouter, HashRouter } from 'react-router-dom';
 import BaseAlert from '@/components/BaseAlert';
 import { useMessage } from '@/contexts/messageContext';
 import { useAuth } from '@/contexts/authContext';
+import { useCustom } from '@/contexts/customContext';
 
 import routes from './routes';
 
@@ -13,8 +14,10 @@ const Route: FC = () => {
 const Router: FC = () => {
   const { state } = useMessage();
   const { getUserInfo } = useAuth();
+  const { getSystemInfo } = useCustom();
   useEffect(() => {
     getUserInfo();
+    getSystemInfo();
   }, []);
   return (
     <HashRouter>

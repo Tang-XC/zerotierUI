@@ -28,6 +28,7 @@ export const routes = [
     showNav: {
       title: '首页',
       icon: 'home',
+      menu: true,
     },
   },
   {
@@ -35,7 +36,9 @@ export const routes = [
     element: lazyLoad(React.lazy(() => import('@/pages/users'))),
     showNav: {
       title: '用户列表',
+      auth: true,
       icon: 'user',
+      menu: true,
     },
   },
   {
@@ -43,7 +46,9 @@ export const routes = [
     element: lazyLoad(React.lazy(() => import('@/pages/network/index'))),
     showNav: {
       title: '网络列表',
+      auth: true,
       icon: 'network',
+      menu: true,
     },
     children: [
       {
@@ -53,10 +58,21 @@ export const routes = [
         ),
       },
       {
-        path: '/network/:id',
+        path: 'detail',
         element: lazyLoad(React.lazy(() => import('@/pages/network/detail'))),
+        showNav: {
+          title: '网络详情',
+        },
       },
     ],
+  },
+  {
+    path: '/custom',
+    element: lazyLoad(React.lazy(() => import('@/pages/custom'))),
+    showNav: {
+      title: '自定义设置',
+      menu: false,
+    },
   },
 ];
 export default [

@@ -71,19 +71,31 @@ func (u *userService) Delete(id string) error {
 	}
 	return u.userRepository.Delete(user)
 }
+func (u *userService) ResetPassword(id string, password string) (string, error) {
+	user, err := u.GetUserById(id)
+	if err != nil {
+		return "", err
+	}
+	user.PassWord = password
+	err = u.userRepository.UpdatePassword(user)
+	if err != nil {
+		return "", err
+	}
+	return "重置成功", nil
+}
 func (u *userService) UpdatePassword(id string, up *model.UpdatedPassword) (string, error) {
-	//var user = new(model.User)
+	var user = new(model.User)
 	old, err := u.GetUserById(id)
 	if err != nil {
 		return "", err
 	}
-	//if old.PassWord != up.OldPassword {
-	//	return "", errors.New("旧密码错误")
-	//}
-	//user.ID = old.ID
-	//if up.NewPassword == up.OldPassword {
-	//	return "", errors.New("新旧密码不能相同")
-	//}
+	if old.PassWord != up.OldPassword {
+		return "", errors.New("旧密码错误")
+	}
+	user.ID = old.ID
+	if up.NewPassword == up.OldPassword {
+		return "", errors.New("新旧密码不能相同")
+	}
 	old.PassWord = up.NewPassword
 	err = u.userRepository.UpdatePassword(old)
 	if err != nil {

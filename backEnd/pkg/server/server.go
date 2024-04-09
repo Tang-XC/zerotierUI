@@ -120,6 +120,7 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	routeService := service.NewRouteService(repository.Network(), zerotier)
 	ipPoolService := service.NewIpPoolService(repository.Network(), zerotier)
 	settingService := service.NewSettingService(zerotier)
+	systemService := service.NewSystemService(repository.System())
 
 	//创建表示层
 	userController := controller.NewUserController(userService)
@@ -131,8 +132,9 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	routeController := controller.NewRouteController(routeService)
 	ipPoolController := controller.NewIpPoolController(ipPoolService)
 	settingController := controller.NewSettingController(settingService)
+	systemController := controller.NewSystemController(systemService)
 	controllers := []controller.Controller{userController, authController, roleController, permissionController,
-		networkController, memberController, routeController, ipPoolController, settingController}
+		networkController, memberController, routeController, ipPoolController, settingController, systemController}
 	e := gin.Default()
 	e.Use(
 		middleware.CORSMiddleware(),

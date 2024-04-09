@@ -99,8 +99,9 @@ func (m *MemberController) UpdateMemberIp(c *gin.Context) {
 	common.SuccessResponse(c, "修改成功")
 }
 func (m *MemberController) Delete(c *gin.Context) {
+	networkId := c.Param("networkId")
 	id := c.Param("id")
-	err := m.memberService.Delete(id)
+	err := m.memberService.Delete(networkId, id)
 	if err != nil {
 		common.FailedResponse(c, http.StatusBadRequest, err)
 		return
@@ -116,7 +117,7 @@ func (m *MemberController) RegisterRoute(api *gin.RouterGroup) {
 		v1.PUT("/controller/member/name", m.UpdateName)
 		v1.PUT("/controller/network/:networkId/member/authorized/:nodeId", m.UpdateAuthorized)
 		v1.PUT("/controller/network/:networkId/member/activeBridge/:nodeId", m.UpdateActiveBridge)
-		v1.DELETE("/controller/member/:id", m.Delete)
+		v1.DELETE("/controller/networki/:networkId/member/:id/delete", m.Delete)
 		v1.PUT("/controller/network/:networkId/member/ip/:nodeId", m.UpdateMemberIp)
 	}
 }

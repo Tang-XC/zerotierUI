@@ -10,6 +10,7 @@ type Repository interface {
 	Permission() PermissionRepository
 	Network() NetworkRepository
 	Member() MemberRepository
+	System() SystemRepository
 	Init() error
 	Close() error
 	Migrant
@@ -61,5 +62,11 @@ type MemberRepository interface {
 	UpdateName(*model.Member) error
 	UpdateAuthorized(*model.Member) error
 	UpdateActiveBridge(*model.Member) error
+	Migrate() error
+}
+type SystemRepository interface {
+	GetSystem(*model.System) (*model.System, error)
+	UpdateSystem(*model.System) (*model.System, error)
+	CreateSystem(*model.System) (*model.System, error)
 	Migrate() error
 }

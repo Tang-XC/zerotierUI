@@ -88,6 +88,7 @@ func (u *UserController) Delete(c *gin.Context) {
 
 	common.SuccessResponse(c, "删除成功")
 }
+
 func (u *UserController) ResetPassword(c *gin.Context) {
 	var up = new(model.UpdatedPassword)
 	if err := c.BindJSON(up); err != nil {
@@ -113,7 +114,7 @@ func (u *UserController) UpdatePassword(c *gin.Context) {
 		common.FailedResponse(c, http.StatusBadRequest, err)
 		return
 	}
-	result, err := u.userService.UpdatePassword(c.Param("id"), up)
+	result, err := u.userService.ResetPassword(c.Param("id"), up.NewPassword)
 	if err != nil {
 		common.FailedResponse(c, http.StatusBadRequest, err)
 		return

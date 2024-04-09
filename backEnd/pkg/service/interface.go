@@ -12,6 +12,7 @@ type UserService interface {
 	Update(string, []uint, *model.User) (*model.User, error)
 	Delete(string) error
 	UpdatePassword(string, *model.UpdatedPassword) (string, error)
+	ResetPassword(id string, password string) (string, error)
 	AddRole(uint, uint) error
 	RemoveRole(uint, uint) error
 }
@@ -50,7 +51,7 @@ type MemberService interface {
 	UpdateAuthorized(networkID string, nodeID string, authorized model.UpdateMemberAuthorized) error
 	UpdateActiveBridge(networkID string, nodeID string, activeBridge model.UpdateMemberActiveBridge) error
 	UpdateMemberIp(networkID string, nodeID string, ips model.UpdateMemberIp) error
-	Delete(id string) error
+	Delete(networkId string, id string) error
 }
 type RouteService interface {
 	List(request model.RouteListRequest) (model.ResponseRoute, error)
@@ -69,4 +70,8 @@ type SettingService interface {
 	SwitchIpv6Zt6plane(ipv6 model.Ipv6Zt6plane) error
 	SwitchIpv6Rfc4193(ipv6 model.Ipv6Rfc4193) error
 	SwitchIpv6Auto(ipv6 model.Ipv6Auto) error
+}
+type SystemService interface {
+	GetSystem() (model.System, error)
+	UpdateSystem(*model.System) (*model.System, error)
 }

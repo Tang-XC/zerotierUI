@@ -30,7 +30,6 @@ func (m *memberService) List(request model.MemberListRequest) (model.ResponseMem
 		if err != nil {
 			return model.ResponseMember{}, err
 		}
-
 		detail := result.(map[string]interface{})
 
 		//获取peer
@@ -40,13 +39,17 @@ func (m *memberService) List(request model.MemberListRequest) (model.ResponseMem
 		if memberDetail, err := m.memberRepository.Detail(detail["id"].(string)); err != nil {
 			//判断err的类型是否为存在
 			if err.Error() == "record not found" {
+				var thePeer float64
+				if peer.(map[string]interface{})["latency"] != nil {
+					thePeer = peer.(map[string]interface{})["latency"].(float64)
+				}
 				addResult, _ := m.Create(&model.Member{
 					ID:           k,
 					Name:         "",
 					Authorized:   detail["authorized"].(bool),
 					ActiveBridge: detail["activeBridge"].(bool),
 					IP:           string(ips),
-					Latency:      peer.(map[string]interface{})["latency"].(float64),
+					Latency:      thePeer,
 				})
 				//判断是否为根服务器
 				if addResult.ID == zt_data.(map[string]interface{})["address"].(string) {
@@ -86,6 +89,20 @@ func (m *memberService) List(request model.MemberListRequest) (model.ResponseMem
 		}
 	}
 	members, err := m.memberRepository.List(request)
+
+	//遍历数据库中的member，删除网络中不存在的member
+	for _, memb := range members.Members {
+		var flag = false
+		for nemb, _ := range response {
+			if memb.ID == nemb {
+				flag = true
+				break
+			}
+		}
+		if !flag {
+			m.memberRepository.Delete(memb.ID)
+		}
+	}
 	if err != nil {
 		return model.ResponseMember{}, err
 	}
@@ -105,7 +122,8 @@ func (m *memberService) Create(member *model.Member) (*model.Member, error) {
 	}
 	return member, nil
 }
-func (m *memberService) Delete(id string) error {
+func (m *memberService) Delete(networkId string, id string) error {
+	m.zerotier.DELETE(fmt.Sprintf("/controller/network/%s/member/%s", networkId, id))
 	err := m.memberRepository.Delete(id)
 	if err != nil {
 		return err

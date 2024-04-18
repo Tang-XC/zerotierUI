@@ -5,14 +5,15 @@ import (
 )
 
 type repository struct {
+	db         *gorm.DB
 	user       UserRepository
 	role       RoleRepository
 	permission PermissionRepository
 	network    NetworkRepository
-	db         *gorm.DB
-	migrants   []Migrant
 	member     *memberRepository
 	system     SystemRepository
+	downLink   DownLinkRepository
+	migrants   []Migrant
 }
 
 func (r *repository) User() UserRepository {
@@ -32,6 +33,9 @@ func (r *repository) Member() MemberRepository {
 }
 func (r *repository) System() SystemRepository {
 	return r.system
+}
+func (r *repository) DownLink() DownLinkRepository {
+	return r.downLink
 }
 func (r *repository) Init() error {
 	return nil
@@ -61,8 +65,9 @@ func NewRepository(db *gorm.DB) Repository {
 		network:    newNetworkRepository(db),
 		member:     newMemberRepository(db),
 		system:     newSystemRepository(db),
+		downLink:   newDownLinkRepository(db),
 	}
-	r.migrants = getMigrants(r.user, r.permission, r.role, r.network, r.member, r.system)
+	r.migrants = getMigrants(r.user, r.permission, r.role, r.network, r.member, r.system, r.downLink)
 	return r
 }
 

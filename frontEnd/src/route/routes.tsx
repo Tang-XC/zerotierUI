@@ -23,6 +23,14 @@ export const routes = [
     element: <Navigate to="/home" replace={true} />,
   },
   {
+    path: '/auth',
+    element: lazyLoad(React.lazy(() => import('@/pages/auth'))),
+    showNav: {
+      title: '登录',
+      menu: false,
+    },
+  },
+  {
     path: '/home',
     element: lazyLoad(React.lazy(() => import('@/pages/home'))),
     showNav: {
@@ -81,10 +89,7 @@ export default [
     element: lazyLoad(React.lazy(() => import('@/Layout'))),
     children: routes,
   },
-  {
-    path: '/auth',
-    element: lazyLoad(React.lazy(() => import('@/pages/auth'))),
-  },
+
   {
     path: '*',
     element: lazyLoad(React.lazy(() => import('@/pages/Error/404'))),

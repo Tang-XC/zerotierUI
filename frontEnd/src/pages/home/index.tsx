@@ -20,51 +20,58 @@ const Home: FC = () => {
     getData();
   }, []);
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100%',
-      }}>
-      <Typography variant="h1">{state.system_name}</Typography>
-      <Typography variant="h3">{state.slogan}</Typography>
-      {links.length !== 0 ? (
-        <Box
-          sx={{
-            mt: 4,
-            display: 'flex',
-          }}>
-          {links.map((item: any, index) => {
-            return (
-              <Button
-                sx={{ mr: 1, ml: 1 }}
-                variant="contained"
-                key={index}
-                onClick={() => {
-                  window.open(item.url);
-                }}>
-                <img
-                  style={{ width: '30px', height: '30px', marginRight: '8px' }}
-                  src={item.icon}
-                  alt={item.name}
-                />
-                {item.name}
-              </Button>
-            );
-          })}
-        </Box>
-      ) : (
-        <Box>
-          {authState.roles.map((item) => item.id).includes(2) && (
-            <div>
-              <span>暂无自定义链接内容,</span>
-              <Button onClick={() => navigate('/custom')}>现在去定义</Button>
-            </div>
-          )}
-        </Box>
-      )}
+    <Box sx={{ height: 'auto', marginTop: '10%', scrollbarWidth: 'none' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+        }}>
+        <Typography variant="h1">{state.system_name}</Typography>
+        <Typography variant="h3">{state.slogan}</Typography>
+        {links.length !== 0 ? (
+          <Box
+            sx={{
+              mt: 4,
+              display: 'flex',
+            }}>
+            {links.map((item: any, index) => {
+              return (
+                <Button
+                  sx={{ mr: 1, ml: 1 }}
+                  variant="contained"
+                  key={index}
+                  onClick={() => {
+                    window.open(item.url);
+                  }}>
+                  <img
+                    style={{
+                      width: '30px',
+                      height: '30px',
+                      marginRight: '8px',
+                    }}
+                    src={item.icon}
+                    alt={item.name}
+                  />
+                  {item.name}
+                </Button>
+              );
+            })}
+          </Box>
+        ) : (
+          <Box>
+            {authState.roles.map((item) => item.id).includes(2) && (
+              <div>
+                <span>暂无自定义链接内容,</span>
+                <Button onClick={() => navigate('/custom')}>现在去定义</Button>
+              </div>
+            )}
+          </Box>
+        )}
+      </Box>
+      <div dangerouslySetInnerHTML={{ __html: state.custom_home }}></div>
     </Box>
   );
 };

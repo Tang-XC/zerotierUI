@@ -85,3 +85,10 @@ export function resetPassword(data:any):Promise<any>{
     data
   })
 }
+export function forgetPassword(data:any):Promise<any>{
+  return request({
+    url:"/forgetPassword",
+    method:'post',
+    data
+  })
+}

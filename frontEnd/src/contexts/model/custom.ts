@@ -3,4 +3,5 @@ export interface Custom {
   system_name:string;
   slogan:string;
   copyright:string;
+  custom_home:string;
 }

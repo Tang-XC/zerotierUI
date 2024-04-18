@@ -277,7 +277,8 @@ const Upload: FC<UploadProps> = forwardRef((props: UploadProps, ref) => {
         <Box
           sx={{
             backgroundColor: 'white',
-            height: '60vh',
+            minWidth: '40vw',
+            minHeight: '60vh',
             p: 2,
           }}>
           <img

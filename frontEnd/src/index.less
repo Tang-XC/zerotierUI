@@ -32,3 +32,61 @@ img {
   width: 100%;
   height: 100%;
 }
+
+/* 动画相关样式 */
+// 淡入淡出
+.fade-enter,
+.fade-appear {
+  opacity: 0;
+}
+
+.fade-enter.fade-enter-active,
+.fade-appear.fade-appear-active {
+  opacity: 1;
+  transition: opacity 0.5s ease-in;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit.fade-exit-active {
+  opacity: 0;
+}
+
+// 淡入滑动
+.fade-slide-enter,
+.fade-slide-appear {
+  opacity: 0;
+  transform: translateX(30%);
+}
+.fade-slide-enter.fade-slide-enter-active,
+.fade-slide-appear.fade-slide-appear-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.5s ease-in, transform 0.3s ease;
+}
+.fade-slide-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+.fade-slide-exit.fade-slide-exit-active {
+  opacity: 0;
+  transform: translateX(-30%);
+  transition: opacity 0.5s ease-in, transform 0.3s ease;
+}
+
+.item-enter {
+  opacity: 0;
+}
+.item-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+.item-exit {
+  opacity: 1;
+}
+.item-exit-active {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
+}

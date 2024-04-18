@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState, useRef } from 'react';
-import { Alert, IconButton, Collapse, AlertTitle, Zoom } from '@mui/material';
+import { Alert, IconButton, AlertTitle, Grow } from '@mui/material';
 import { AlertColor } from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import './index.less';
@@ -41,7 +41,7 @@ const BaseAlert: FC<Props> = (props: Props) => {
     };
   }, [props]);
   return (
-    <Zoom in={isShow}>
+    <Grow in={isShow}>
       <Alert
         severity={type}
         sx={{
@@ -68,7 +68,7 @@ const BaseAlert: FC<Props> = (props: Props) => {
         {title && <AlertTitle>{title}</AlertTitle>}
         {content}
       </Alert>
-    </Zoom>
+    </Grow>
   );
   /* return (
     <Collapse

@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { Outlet } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
 import { Container, Box } from '@mui/material';
 import Header from './components/header';
 import { useCustom } from '@/contexts/customContext';
@@ -57,7 +59,19 @@ const LayoutPage: FC<Props> = (props: Props) => {
             sx={{
               flex: '1 1 auto',
             }}>
-            <Outlet />
+            <TransitionGroup style={{ height: '100%', overflow: 'hidden' }}>
+              <CSSTransition
+                key={location.pathname}
+                classNames="fade-slide"
+                timeout={500}
+                unmountOnExit={true}
+                mountOnEnter={true}
+                appear={true}
+                exit={false}
+                in={true}>
+                <Outlet />
+              </CSSTransition>
+            </TransitionGroup>
           </Box>
           <footer
             style={{

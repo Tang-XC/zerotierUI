@@ -6,13 +6,14 @@ import {
   InputAdornment,
   Tooltip,
   IconButton,
+  Button,
 } from '@mui/material';
 import PhotoIcon from '@mui/icons-material/Photo';
 import CheckIcon from '@mui/icons-material/Check';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { Upload, ZTCard, ZTTable, ZTDialog } from '@/components';
+import { Upload, ZTCard, ZTTable, ZTDialog, ZTCode } from '@/components';
 import {
   getSystem,
   updateSystem,
@@ -33,6 +34,8 @@ const Index: FC = () => {
   const [linkDialog, setLinkDialog] = useState(false);
   const [currentItem, setCurrentItem] = useState({});
   const [maxMember, setMaxMember] = useState<string>('0');
+  const [custom_home, setCustom_home] = useState<string>('');
+  const [protocol_info, setProtocol_info] = useState<string>('');
   const { dispatch: dispatchMessage } = useMessage();
   const { dispatch: dispatchCustom } = useCustom();
   const actionRef = useRef<any>(null);
@@ -114,6 +117,8 @@ const Index: FC = () => {
       setSlogan(result.data.slogan);
       setCopyright(result.data.copyright);
       setMaxMember(result.data.max_member);
+      setCustom_home(result.data.custom_home);
+      setProtocol_info(result.data.protocol_info);
       dispatchCustom(result.data);
     }
   };
@@ -204,7 +209,23 @@ const Index: FC = () => {
     }
     actionRef.current.reload();
   };
-  const onNetworkSetting = () => {};
+  const onCustomHomeSubmit = async () => {
+    const result = await updateSystem({
+      ...data,
+      custom_home: custom_home,
+    });
+    if (result.code === 200) {
+      dispatchMessage({
+        type: 'SET_MESSAGE',
+        payload: {
+          type: 'success',
+          content: '修改成功',
+          delay: 5000,
+        },
+      });
+      location.reload();
+    }
+  };
   useEffect(() => {
     getData();
   }, []);
@@ -380,7 +401,74 @@ const Index: FC = () => {
               }}
             />
           </div>
+          <div>
+            <TextField
+              margin="normal"
+              fullWidth
+              label="用户协议"
+              size="small"
+              multiline
+              rows={4}
+              value={protocol_info}
+              onChange={(val) => {
+                setProtocol_info(val.target.value);
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      size="small"
+                      onClick={async () => {
+                        const result = await updateSystem({
+                          ...data,
+                          protocol_info: protocol_info,
+                        });
+                        if (result.code === 200) {
+                          dispatchMessage({
+                            type: 'SET_MESSAGE',
+                            payload: {
+                              type: 'success',
+                              content: '修改成功',
+                              delay: 5000,
+                            },
+                          });
+                          getData();
+                          location.reload();
+                        }
+                      }}
+                      sx={{
+                        color: 'primary.main',
+                        mr: -1,
+                      }}>
+                      <CheckIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </div>
         </Box>
+      </ZTCard>
+      <ZTCard
+        title="首页自定义"
+        style={{ marginTop: '12px' }}
+        extra={() => (
+          <Button variant="contained" onClick={onCustomHomeSubmit}>
+            提交
+          </Button>
+        )}>
+        <Box
+          sx={{
+            mt: 2,
+          }}
+        />
+        <ZTCode
+          // height="calc(100vh - 433px)"
+          value={custom_home}
+          onChange={(val) => {
+            setCustom_home(val);
+          }}
+        />
       </ZTCard>
       <ZTCard title="网络创建设置" style={{ marginTop: '12px' }}>
         <TextField

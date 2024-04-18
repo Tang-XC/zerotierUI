@@ -12,7 +12,7 @@ const BreadCrumb: FC = () => {
       routes.forEach((route) => {
         const routePath = route.path.replace('/', '');
         if (routePath === path) {
-          breadcrumb.push(route.showNav.title);
+          breadcrumb.push(route.showNav?.title);
           return;
         } else if (route.children) {
           getBreadcrumbName(route.children, path);

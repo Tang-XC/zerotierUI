@@ -1,17 +1,30 @@
 server:
-  env: 'debug'
-  address: '127.0.0.1'
-  port: 8080
-  gracefulShutdownPeriod: 30 #服务器优雅地等待现有连接完成的持续时间 - 例如15s或1m。
-  jwtSecret: who is rich daddy
+  env: "debug"                                          #开发环境或生产环境
+  address: "127.0.0.1"                                  #服务器监听地址
+  port: 8080                                            #服务器监听端口
+  gracefulShutdownPeriod: 30                            #服务器优雅地等待现有连接完成的持续时间 - 例如15s或1m。
+  jwtSecret: "who is rich daddy"                        #JWT加密密钥
+  encryptKey: "r2grc6gGpgEdD/njGzewkw=="                #用于加密用户密码的密钥
+smtp:
+  smtpServer: "smtp.qq.com"                             #SMTP服务器地址
+  smtpPort: 587                                         #SMTP服务器端口
+  smtpUser: "694098@qq.com"                             #SMTP服务器用户名
+  smtpPassword: "oydsbrhrgtzsbjca"                      #SMTP服务器密码
 db:
-  port: 3306
-  host: "localhost"
-  name: "zerotier"
-  user: "root"
-  password: "123456"
+  port: 3306                                            #数据库端口
+  host: "localhost"                                     #数据库地址
+  name: "zerotier"                                      #数据库名称
+  user: "root"                                          #数据库用户名
+  password: "123456"                                    #数据库密码
 zerotier:
-  address: "127.0.0.1"
-  port: 9993
-  token: "7646e8dc4c5d19fdee5db67e"
-  tokenPath: "/var/lib/zerotier-one/authtoken.secret"
+  address: "127.0.0.1"                                  #zerotier服务器地址
+  port: 9993                                            #zerotier服务器端口
+  token: "7646e8dc4c5d19fdee5db67e"                     #zerotier服务器token
+  tokenPath: "/var/lib/zerotier-one/authtoken.secret"   #zerotier服务器token文件路径
+systemConfig:
+  logo: "LOGO未定义"                                     #系统Logo
+  systemName: "系统名称未定义"                            #系统名称
+  slogan: "Slogan未定义"                                 #系统口号
+  copyright: "版权未定义"                                 #系统版权信息
+  maxMember: 4                                          #新建网络默认最大成员数
+  protocolInfo: "协议信息未定义"                          #用户协议信息

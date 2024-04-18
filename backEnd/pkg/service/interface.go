@@ -19,6 +19,7 @@ type UserService interface {
 
 type AuthService interface {
 	Login(*model.LoginUser) (interface{}, error)
+	ForgetPassword(*model.ForgetPasswordParams) (string, error)
 }
 
 type RoleService interface {
@@ -74,4 +75,10 @@ type SettingService interface {
 type SystemService interface {
 	GetSystem() (model.System, error)
 	UpdateSystem(*model.System) (*model.System, error)
+}
+type DownLinkService interface {
+	List() (model.DownLinks, error)
+	Create(*model.DownLink) error
+	Update(*model.DownLink) error
+	Delete(id uint) error
 }

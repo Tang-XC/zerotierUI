@@ -12,6 +12,13 @@ type ServerConfig struct {
 	Port                   int    `yaml:"port"`
 	GracefulShutdownPeriod int    `yaml:"gracefulShutdownPeriod"`
 	JwtSecret              string `yaml:"jwtSecret"`
+	EncryptKey             string `yaml:"encryptKey"`
+}
+type SMTPOption struct {
+	SmtpServer   string `yaml:"smtpServer"`
+	SmtpPort     int    `yaml:"smtpPort"`
+	SmtpUser     string `yaml:"smtpUser"`
+	SmtpPassword string `yaml:"smtpPassword"`
 }
 
 type DBConfig struct {
@@ -27,10 +34,20 @@ type ZerotierConfig struct {
 	Token     string `yaml:"token"`
 	TokenPath string `yaml:"tokenPath"`
 }
+type SystemConfig struct {
+	Logo         string `yaml:"logo"`
+	SystemName   string `yaml:"systemName"`
+	Slogan       string `yaml:"slogan"`
+	Copyright    string `yaml:"copyright"`
+	MaxMember    int    `yaml:"maxMember"`
+	ProtocolInfo string `yaml:"protocolInfo"`
+}
 type Config struct {
-	Server   ServerConfig   `yaml:"server"`
-	DB       DBConfig       `yaml:"db"`
-	Zerotier ZerotierConfig `yaml:"zerotier"`
+	Server       ServerConfig   `yaml:"server"`
+	DB           DBConfig       `yaml:"db"`
+	Zerotier     ZerotierConfig `yaml:"zerotier"`
+	SystemConfig SystemConfig   `yaml:"systemConfig"`
+	Smtp         SMTPOption     `yaml:"smtp"`
 }
 
 func Parse(appConfig string) (*Config, error) {

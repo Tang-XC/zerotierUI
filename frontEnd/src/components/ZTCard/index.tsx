@@ -1,19 +1,29 @@
 import { FC, useState } from 'react';
-import { Card, Divider, CardContent, Typography } from '@mui/material';
+import { Card, Divider, CardContent, Typography, Box } from '@mui/material';
 interface Props {
   title: string;
   children: any;
   style?: any;
+  extra?: any;
 }
 const ZTCard: FC<Props> = (props: Props) => {
-  const { title, style } = props;
+  const { title, style, extra } = props;
   return (
     <div style={style}>
       <Card>
         <CardContent>
-          <Typography variant="h6" component="div">
-            {title}
-          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Typography variant="h6" component="div">
+              {title}
+            </Typography>
+
+            <Box>{extra?.()}</Box>
+          </Box>
           <Divider
             sx={{
               mt: 1,

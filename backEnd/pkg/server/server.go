@@ -112,7 +112,7 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 
 	//创建业务逻辑层
 	userService := service.NewUserService(repository.User(), repository.Role())
-	authService := service.NewAuthService(repository.User())
+	authService := service.NewAuthService(repository.User(), conf)
 	roleService := service.NewRoleService(repository.Role())
 	permissionService := service.NewPermissionService(repository.Permission())
 	networkService := service.NewNetworkService(repository.Network(), zerotier, repository.User(), repository.Member())
@@ -120,11 +120,12 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	routeService := service.NewRouteService(repository.Network(), zerotier)
 	ipPoolService := service.NewIpPoolService(repository.Network(), zerotier)
 	settingService := service.NewSettingService(zerotier)
-	systemService := service.NewSystemService(repository.System())
+	systemService := service.NewSystemService(repository.System(), conf)
+	downLinkService := service.NewDownLinkService(repository.DownLink())
 
 	//创建表示层
 	userController := controller.NewUserController(userService)
-	authController := controller.NewAuthController(userService, authService)
+	authController := controller.NewAuthController(userService, authService, conf)
 	roleController := controller.NewRoleController(roleService)
 	permissionController := controller.NewPermissionController(permissionService)
 	networkController := controller.NewNetworkController(networkService, userService)
@@ -133,8 +134,9 @@ func New(conf *config.Config, logger *logrus.Logger) (*Server, error) {
 	ipPoolController := controller.NewIpPoolController(ipPoolService)
 	settingController := controller.NewSettingController(settingService)
 	systemController := controller.NewSystemController(systemService)
+	downLinkController := controller.NewDownLinkController(downLinkService)
 	controllers := []controller.Controller{userController, authController, roleController, permissionController,
-		networkController, memberController, routeController, ipPoolController, settingController, systemController}
+		networkController, memberController, routeController, ipPoolController, settingController, systemController, downLinkController}
 	e := gin.Default()
 	e.Use(
 		middleware.CORSMiddleware(),

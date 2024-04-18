@@ -103,3 +103,8 @@ type RemoveRoleParams struct {
 	UserID uint `json:"user_id"`
 	RoleID uint `json:"role_id"`
 }
+
+type ForgetPasswordParams struct {
+	Account string `json:"account"`
+	Email   string `json:"email"`
+}

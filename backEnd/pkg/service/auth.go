@@ -2,14 +2,18 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
+	"shop/pkg/config"
 	"shop/pkg/model"
 	"shop/pkg/repository"
+	"shop/pkg/utils/email"
 	utils "shop/pkg/utils/token"
 )
 
 type authService struct {
 	userRepository repository.UserRepository
+	conf           *config.Config
 }
 
 func (a *authService) Login(au *model.LoginUser) (interface{}, error) {
@@ -34,9 +38,36 @@ func (a *authService) Login(au *model.LoginUser) (interface{}, error) {
 	}
 	return response, nil
 }
+func (a *authService) ForgetPassword(params *model.ForgetPasswordParams) (string, error) {
+	//检查用户是否存在
+	data, err := a.userRepository.GetUserByAccount(params.Account)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return "", errors.New("用户不存在")
+		}
+	}
+	//检查邮箱是否正确
+	if data.Email != params.Email {
+		return "", errors.New("邮箱与注册时填写不一致")
+	}
 
-func NewAuthService(userRepository repository.UserRepository) AuthService {
+	//生成token
+	token := utils.GenerateRandomString(12)
+	//发送邮件
+	fmt.Println(a.conf.Smtp)
+	error := email.SendEmail(data.Email, "重置密码", fmt.Sprintf("密码已为您重置为："+token), &a.conf.Smtp)
+	if error != nil {
+		return "", errors.New("密码重置邮件发送失败")
+	}
+	//重置密码
+	data.PassWord = token
+	a.userRepository.Update(data)
+	return "邮件已发送，请注意查收", nil
+}
+
+func NewAuthService(userRepository repository.UserRepository, conf *config.Config) AuthService {
 	return &authService{
 		userRepository: userRepository,
+		conf:           conf,
 	}
 }

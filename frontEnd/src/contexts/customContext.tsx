@@ -22,6 +22,7 @@ const initialState: Custom = {
   logo: sessionData.logo || '',
   system_name: sessionData.system_name || '',
   copyright: sessionData.copyrigt || '',
+  custom_home: sessionData.custom_home || '',
 };
 
 const customContext: React.Context<{}> = createContext({});

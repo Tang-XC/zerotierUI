@@ -85,7 +85,6 @@ func (u *UserController) Delete(c *gin.Context) {
 		common.FailedResponse(c, http.StatusBadRequest, err)
 		return
 	}
-
 	common.SuccessResponse(c, "删除成功")
 }
 

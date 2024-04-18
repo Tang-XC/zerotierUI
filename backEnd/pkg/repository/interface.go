@@ -11,6 +11,7 @@ type Repository interface {
 	Network() NetworkRepository
 	Member() MemberRepository
 	System() SystemRepository
+	DownLink() DownLinkRepository
 	Init() error
 	Close() error
 	Migrant
@@ -68,5 +69,13 @@ type SystemRepository interface {
 	GetSystem(*model.System) (*model.System, error)
 	UpdateSystem(*model.System) (*model.System, error)
 	CreateSystem(*model.System) (*model.System, error)
+	Migrate() error
+}
+type DownLinkRepository interface {
+	Get(uint) (model.DownLink, error)
+	List() (model.DownLinks, error)
+	Create(*model.DownLink) error
+	Update(*model.DownLink) error
+	Delete(uint) error
 	Migrate() error
 }

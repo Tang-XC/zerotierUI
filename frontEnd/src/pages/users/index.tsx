@@ -32,6 +32,7 @@ import LockResetIcon from '@mui/icons-material/LockReset';
 import InfoIcon from '@mui/icons-material/Info';
 import { useMessage } from '@/contexts/messageContext';
 import { useAuth } from '@/contexts/authContext';
+import { encryptByAES } from '@/utils/encryption.js';
 
 const Users: FC = () => {
   const [open, setOpen] = useState(false);
@@ -58,7 +59,6 @@ const Users: FC = () => {
   } = useForm({ defaultValues: defaultValues });
   const { dispatch: dispatchMessage } = useMessage();
   const { state } = useAuth();
-  console.log(state);
 
   const columns = useMemo(() => {
     let arrs = [
@@ -145,7 +145,10 @@ const Users: FC = () => {
             <Tooltip title="删除">
               <IconButton
                 type="button"
-                disabled={!state.permissions.includes('user-del')}
+                disabled={
+                  !state.permissions.includes('user-del') ||
+                  state.account === record.account
+                }
                 onClick={(event) => {
                   setCurrentId(record.id);
                   setAnchorEl(event.currentTarget);
@@ -154,9 +157,11 @@ const Users: FC = () => {
                 <DeleteIcon
                   sx={{
                     cursor: 'pointer',
-                    color: state.permissions.includes('user-del')
-                      ? 'error.main'
-                      : 'action.disabled',
+                    color:
+                      !state.permissions.includes('user-del') ||
+                      state.account === record.account
+                        ? 'action.disabled'
+                        : 'error.main',
                   }}
                 />
               </IconButton>
@@ -221,7 +226,7 @@ const Users: FC = () => {
     } else if (actionType === 1) {
       const result = await editUser(currentId, {
         ...val,
-        roles: [val.roles],
+        roles: val.roles instanceof Array ? val.roles : [val.roles],
       });
       if (result.code === 200) {
         dispatchMessage({
@@ -237,7 +242,7 @@ const Users: FC = () => {
       }
     } else if (actionType === 2) {
       const result = await changePassword(currentId, {
-        new_password: val.password,
+        new_password: encryptByAES(val.password),
       });
       if (result.code === 200) {
         dispatchMessage({
@@ -337,6 +342,7 @@ const Users: FC = () => {
                         id={field.name}
                         label="密码"
                         required
+                        type="password"
                         error={!!errors.password}
                         helperText={errors.password ? '密码不能为空' : null}
                         {...(fieldProps as any)}
@@ -472,4 +478,4 @@ const Users: FC = () => {
     </>
   );
 };
-export default () => withAuth(Users);
+export default () => withAuth(Users, undefined, [2]);

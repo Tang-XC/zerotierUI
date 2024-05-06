@@ -64,6 +64,21 @@ func (n *networkService) Delete(id string) error {
 	n.zerotier.DELETE(fmt.Sprintf("/controller/network/%s", id))
 	return n.networkRepository.Delete(id)
 }
+func (n *networkService) Update(id string, updateNetwork *model.UpdateNetwork) (string, error) {
+	network, err := n.networkRepository.GetNetworkById(id)
+	if err != nil {
+		return "", err
+	}
+	newNetwork := updateNetwork.GetNetwork()
+	newNetwork.ID = id
+	newNetwork.CreatedAt = network.CreatedAt
+	newNetwork.Owner = network.Owner
+	_, err = n.networkRepository.Update(&newNetwork)
+	if err != nil {
+		return "", err
+	}
+	return "更新成功", nil
+}
 func (n *networkService) AddMember(networkId string, memberId string) (string, error) {
 	network, err := n.networkRepository.Detail(networkId)
 	if err != nil {

@@ -18,7 +18,9 @@ const ZTCode: FC<Props> = (prop: Props) => {
           basicSetup,
           html(),
           EditorView.updateListener.of((e) => {
-            onChange(e.state.doc.toString());
+            let result = e.state.doc.toString();
+            result === '' && (result = `<div>\n</div>`);
+            onChange(result);
           }),
         ],
         parent: codeMirrorRef.current as Element,

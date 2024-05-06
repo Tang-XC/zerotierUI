@@ -26,6 +26,7 @@ const sessionData = JSON.parse(sessionStorage.getItem('userInfo') || '{}');
 const initialState: User = {
   id: sessionData.id || 0,
   name: sessionData.name || '',
+  account: sessionData.account || '',
   avatar: sessionData.avatar || '',
   email: sessionData.email || '',
   phone: sessionData.phone || '',
@@ -63,7 +64,7 @@ export const AuthContextProvider: FC<Props> = ({ children }) => {
         payload: result.data,
       });
       sessionStorage.setItem('userInfo', JSON.stringify(result.data));
-      if (result.data.roles.length !== 0) {
+      if (result.data.roles && result.data.roles.length !== 0) {
         const id = result.data.roles[0].id;
         const roleResult = await getRole(id);
         if (roleResult.code === 200) {

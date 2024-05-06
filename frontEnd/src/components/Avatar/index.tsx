@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { resetPassword, editUser } from '@/api/user';
 import { useMessage } from '@/contexts/messageContext';
+import { encryptByAES } from '@/utils/encryption.js';
 
 interface Props {
   name?: string;
@@ -70,8 +71,8 @@ const Avatar: FC<Props> = (props) => {
   };
   const handleResetSubmit = async (val: any) => {
     const result = await resetPassword({
-      old_password: val.old_password,
-      new_password: val.new_password,
+      old_password: encryptByAES(val.old_password),
+      new_password: encryptByAES(val.new_password),
     });
     if (result.code === 200) {
       setIsPdReset(false);
@@ -250,6 +251,7 @@ const Avatar: FC<Props> = (props) => {
                   id={field.name}
                   margin="normal"
                   fullWidth
+                  type="password"
                   label="旧密码"
                   {...field}
                 />
@@ -264,12 +266,19 @@ const Avatar: FC<Props> = (props) => {
                   id={field.name}
                   margin="normal"
                   fullWidth
+                  type="password"
                   label="新密码"
                   {...field}
                 />
               )}
             />
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                mb: -3.1,
+                mr: -1,
+              }}>
               <Button
                 type="button"
                 variant="contained"
@@ -359,7 +368,13 @@ const Avatar: FC<Props> = (props) => {
                 />
               )}
             />
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                mb: -3.1,
+                mr: -1,
+              }}>
               <Button
                 type="button"
                 variant="contained"

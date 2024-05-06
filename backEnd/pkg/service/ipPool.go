@@ -102,6 +102,7 @@ func (i *ipPoolService) Recover(ipPool model.AddIpPool) error {
 			},
 		},
 	}
+	fmt.Println(fmt.Sprintf("/controller/network/%s", ipPool.NetworkId))
 	_, err := i.zerotier.POST(fmt.Sprintf("/controller/network/%s", ipPool.NetworkId), data)
 	if err != nil {
 		return err

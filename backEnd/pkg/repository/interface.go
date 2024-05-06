@@ -48,8 +48,10 @@ type PermissionRepository interface {
 type NetworkRepository interface {
 	List(request model.ListRequest) (model.ResponseNetwork, error)
 	Detail(string) (*model.Network, error)
+	Update(*model.Network) (*model.Network, error)
 	Create(*model.Network) (*model.Network, error)
 	Delete(string) error
+	GetNetworkById(string) (*model.Network, error)
 	AddMember(*model.Network, *model.Member) error
 	AddRoutes(*model.Network, model.Routes) error
 	Migrate() error

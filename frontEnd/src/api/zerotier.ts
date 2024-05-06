@@ -21,6 +21,13 @@ export function CreateNetworks(data={}):Promise<ResponseData> {
     data
   })
 }
+export function UpdateNetworks(id:string,data={}):Promise<ResponseData> {
+  return request({
+    url: "/controller/networkDetail/" + id,
+    method: "put",
+    data
+  })
+}
 export function getNetwork(id:string):Promise<ResponseData> {
   return request({
     url: "/controller/network/" + id,

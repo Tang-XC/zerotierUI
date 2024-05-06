@@ -30,6 +30,20 @@ func (a *AddNetwork) GetNetwork() Network {
 	}
 }
 
+type UpdateNetwork struct {
+	Name           string `json:"name"`
+	Desc           string `json:"desc"`
+	MaxMemberShips int    `json:"max_memberships"`
+}
+
+func (a *UpdateNetwork) GetNetwork() Network {
+	return Network{
+		Name:           a.Name,
+		Desc:           a.Desc,
+		MaxMemberShips: a.MaxMemberShips,
+	}
+}
+
 type ListRequest struct {
 	Page     int
 	Size     int

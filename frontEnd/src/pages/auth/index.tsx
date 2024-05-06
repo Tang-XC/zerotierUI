@@ -75,7 +75,7 @@ const SignIn: FC = () => {
   };
   const onSignUpSubmit = async (val: any) => {
     const result = await signUp({
-      account: encryptByAES(val.account),
+      account: val.account,
       password: encryptByAES(val.password),
     });
     if (result.code === 200) {

@@ -72,6 +72,20 @@ func (n *NetworkController) Delete(c *gin.Context) {
 	}
 	common.SuccessResponse(c, nil)
 }
+func (n *NetworkController) Update(c *gin.Context) {
+	id := c.Param("id")
+	updateNetwork := new(model.UpdateNetwork)
+	if err := c.ShouldBindJSON(updateNetwork); err != nil {
+		common.FailedResponse(c, http.StatusBadRequest, err)
+		return
+	}
+	network, err := n.networkService.Update(id, updateNetwork)
+	if err != nil {
+		common.FailedResponse(c, http.StatusBadRequest, err)
+		return
+	}
+	common.SuccessResponse(c, network)
+}
 
 func (n *NetworkController) RegisterRoute(api *gin.RouterGroup) {
 	v1 := api.Group("/", middleware.Auth())
@@ -81,6 +95,7 @@ func (n *NetworkController) RegisterRoute(api *gin.RouterGroup) {
 		v1.GET("/controller/network/:id", n.Detail)
 		v1.DELETE("/controller/network/:id", n.Delete)
 		v1.GET("/controller/network/memberships/:id", n.MembershipsList)
+		v1.PUT("/controller/networkDetail/:id", n.Update)
 	}
 }
 

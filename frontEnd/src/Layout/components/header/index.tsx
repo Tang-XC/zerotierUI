@@ -1,6 +1,14 @@
 import { FC, useEffect, useMemo, useState } from 'react';
-import { AppBar, Toolbar, Typography, Link, Box, Button } from '@mui/material';
-import { Avatar } from '@/components';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Link,
+  Box,
+  Button,
+  IconButton,
+} from '@mui/material';
+import { Avatar, SvgIcon } from '@/components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { routes } from '@/route/routes';
 
@@ -25,6 +33,7 @@ const Header: FC<Props> = (props: Props) => {
     <>
       <AppBar
         position="relative"
+        className="layout-header"
         sx={{
           zIndex: '1',
         }}>
@@ -109,6 +118,15 @@ const Header: FC<Props> = (props: Props) => {
               </Button>
             </Box>
           )}
+          <Box sx={{ fontSize: '0px' }}>
+            <IconButton
+              sx={{ mr: -1 }}
+              onClick={() => {
+                window.open('https://docs.yyds.fr/');
+              }}>
+              <SvgIcon name="help" color="white" size="24px" />
+            </IconButton>
+          </Box>
         </Toolbar>
       </AppBar>
     </>

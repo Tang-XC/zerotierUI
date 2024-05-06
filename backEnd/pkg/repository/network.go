@@ -73,9 +73,22 @@ func (n *networkRepository) Detail(id string) (*model.Network, error) {
 	}
 	return network, nil
 }
+func (n *networkRepository) GetNetworkById(id string) (*model.Network, error) {
+	network := new(model.Network)
+	if err := n.db.Preload("Members").Where("id = ?", id).First(network).Error; err != nil {
+		return nil, err
+	}
+	return network, nil
+}
 
 func (n *networkRepository) Create(network *model.Network) (*model.Network, error) {
 	if err := n.db.Create(network).Error; err != nil {
+		return nil, err
+	}
+	return network, nil
+}
+func (n *networkRepository) Update(network *model.Network) (*model.Network, error) {
+	if err := n.db.Save(network).Error; err != nil {
 		return nil, err
 	}
 	return network, nil

@@ -24,7 +24,6 @@ func (a *AuthController) Login(c *gin.Context) {
 	encKey := []byte(a.conf.Server.EncryptKey)
 
 	loginInfo.Account, _ = crypto.DecryptAES(loginInfo.Account, encKey)
-	loginInfo.Password, _ = crypto.DecryptAES(loginInfo.Password, encKey)
 	result, err := a.authService.Login(loginInfo)
 	if err != nil {
 		common.FailedResponse(c, 401, err)

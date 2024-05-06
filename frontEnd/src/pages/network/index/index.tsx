@@ -19,7 +19,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
 
 import { ZTTable } from '@/components';
-import { hostedNetworks, CreateNetworks, deleteNetwork } from '@/api/zerotier';
+import {
+  hostedNetworks,
+  CreateNetworks,
+  UpdateNetworks,
+  deleteNetwork,
+} from '@/api/zerotier';
 import { getSystem } from '@/api/system';
 import { useForm, Controller } from 'react-hook-form';
 import { useMessage } from '@/contexts/messageContext';
@@ -183,6 +188,20 @@ const Index: FC = () => {
     };
     if (actionType === 0) {
       const result = await CreateNetworks(params);
+      if (result.code === 200) {
+        setOpen(false);
+        actionRef.current?.reload();
+        dispatchMessage({
+          type: 'SET_MESSAGE',
+          payload: {
+            type: 'success',
+            content: result.data,
+            delay: 5000,
+          },
+        });
+      }
+    } else if (actionType === 1) {
+      const result = await UpdateNetworks(currentId, params);
       if (result.code === 200) {
         setOpen(false);
         actionRef.current?.reload();

@@ -41,7 +41,7 @@ const _401_: FC = (): JSX.Element => {
           <Button variant="outlined" onClick={handleBack}>
             返回
           </Button>
-          <Button
+          {/* <Button
             variant="contained"
             style={{
               marginLeft: '12px',
@@ -50,7 +50,7 @@ const _401_: FC = (): JSX.Element => {
               navigate('/auth');
             }}>
             登录
-          </Button>
+          </Button> */}
         </div>
       </Box>
     </Box>

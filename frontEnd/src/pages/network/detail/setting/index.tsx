@@ -18,7 +18,6 @@ import {
   Button,
   Stack,
 } from '@mui/material';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useForm, Controller } from 'react-hook-form';
@@ -30,7 +29,7 @@ import {
   switchIpv6Auto,
   recoverIpPool,
 } from '@/api/zerotier';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useMessage } from '@/contexts/messageContext';
 interface SettingProps {
   data?: any;
@@ -58,7 +57,7 @@ const Setting: FC<SettingProps> = (props: SettingProps) => {
   const fieldProps = {
     fullWidth: true,
   };
-  const { id } = useParams();
+  const { id } = useLocation().state;
   const { dispatch: dispatchMessage } = useMessage();
   const {
     control,

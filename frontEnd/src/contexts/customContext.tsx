@@ -50,6 +50,7 @@ export const CustomContextProvider: FC<Props> = ({ children }) => {
         type: ACTION_TYPE.SET_DATA,
         payload: result.data,
       });
+      document.title = result.data.system_name;
     }
     return result;
   };

@@ -14,11 +14,11 @@ import {
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { getRoutesList, createRoute, deleteRoute } from '@/api/zerotier';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useMessage } from '@/contexts/messageContext';
 
 const Routes = () => {
-  const params = useParams();
+  const params = useLocation().state;
   const columns = [
     {
       title: '目标',

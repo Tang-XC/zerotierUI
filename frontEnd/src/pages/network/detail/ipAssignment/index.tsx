@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { getIpPoolList, createIpPool, deleteIpPool } from '@/api/zerotier';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { FC, useEffect, useImperativeHandle, useState } from 'react';
 import { useMessage } from '@/contexts/messageContext';
 
@@ -22,7 +22,7 @@ interface IpAssignmentProps {
 }
 const IpAssignment: FC<IpAssignmentProps> = (props: IpAssignmentProps) => {
   const { actionRef } = props;
-  const params = useParams();
+  const params = useLocation().state;
   const [form, setForm] = useState({
     ip_range_start: '',
     ip_range_end: '',

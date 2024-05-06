@@ -38,6 +38,7 @@ type NetworkService interface {
 	List(request model.ListRequest) (model.ResponseNetwork, error)
 	MembershipsList(id string) (map[string]interface{}, error)
 	Detail(id string) (*model.DetailNetwork, error)
+	Update(id string, network *model.UpdateNetwork) (string, error)
 	Create(network *model.AddNetwork, token string) (string, error)
 	Delete(id string) error
 	AddMember(networkId string, memberId string) (string, error)

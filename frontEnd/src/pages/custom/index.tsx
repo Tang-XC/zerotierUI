@@ -117,7 +117,7 @@ const Index: FC = () => {
       setSlogan(result.data.slogan);
       setCopyright(result.data.copyright);
       setMaxMember(result.data.max_member);
-      setCustom_home(result.data.custom_home);
+      setCustom_home(result.data.custom_home || `<div>\n</div>`);
       setProtocol_info(result.data.protocol_info);
       dispatchCustom(result.data);
     }

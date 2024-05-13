@@ -27,6 +27,7 @@ func (m *memberService) List(request model.MemberListRequest) (model.ResponseMem
 	for k, _ := range response {
 		//获取member详情
 		result, err := m.zerotier.GET(fmt.Sprintf("/controller/network/%s/member/%s", request.NetworkId, k))
+		fmt.Println(result)
 		if err != nil {
 			return model.ResponseMember{}, err
 		}
@@ -90,7 +91,6 @@ func (m *memberService) List(request model.MemberListRequest) (model.ResponseMem
 	}
 	members, err := m.memberRepository.List(request)
 
-	//遍历数据库中的member，删除网络中不存在的member
 	for _, memb := range members.Members {
 		var flag = false
 		for nemb, _ := range response {

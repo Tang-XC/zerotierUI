@@ -182,6 +182,7 @@ const Table: FC<TableProps> = (props: TableProps) => {
           {onCreate && (
             <div>
               <IconButton
+                className="step-two"
                 type="button"
                 sx={{ p: '10px' }}
                 onClick={() => onCreate()}>

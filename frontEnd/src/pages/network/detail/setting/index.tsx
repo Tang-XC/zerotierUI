@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import {
   Box,
   List,
@@ -31,15 +31,23 @@ import {
 } from '@/api/zerotier';
 import { useLocation } from 'react-router-dom';
 import { useMessage } from '@/contexts/messageContext';
+import Joyride from 'react-joyride';
+import { useStepsContext } from '@/contexts/stepContext';
+
 interface SettingProps {
   data?: any;
   onClose?: () => void;
   onCallback?: () => void;
 }
 const Setting: FC<SettingProps> = (props: SettingProps) => {
+  const { state: stepState, dispatch } = useStepsContext();
+
   const { onClose, data, onCallback } = props;
   const getInitValues = (params: any) => {
-    if (data.more_info.ipAssignmentPools.length > 0) {
+    if (
+      data.more_info?.ipAssignmentPools &&
+      data.more_info.ipAssignmentPools.length > 0
+    ) {
       params.CIDR = data.more_info.ipAssignmentPools[0].ipRangeStart.replace(
         /\.\d+$/,
         '.0/24'
@@ -229,6 +237,11 @@ const Setting: FC<SettingProps> = (props: SettingProps) => {
       });
     }
   };
+  const handleStepCallback = (data: any) => {
+    if (data.action === 'next' && data.lifecycle === 'complete') {
+      stepState.stepIndex += 1;
+    }
+  };
 
   return (
     <Box
@@ -250,6 +263,8 @@ const Setting: FC<SettingProps> = (props: SettingProps) => {
             sx={{
               display: 'flex',
               alignItems: 'center',
+              transform: 'translateY(-20px)',
+              py: 1,
             }}>
             <IconButton
               onClick={onClose}
@@ -352,12 +367,14 @@ const Setting: FC<SettingProps> = (props: SettingProps) => {
             display: 'flex',
             justifyContent: 'space-between',
           }}
+          className="step-six"
           disablePadding>
           <Accordion
             sx={{
               boxShadow: 'none',
               width: '100%',
-            }}>
+            }}
+            expanded={true}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               id="panel1-header">
@@ -447,6 +464,29 @@ const Setting: FC<SettingProps> = (props: SettingProps) => {
           </Accordion>
         </ListItem>
       </List>
+      {stepState.isSkip && stepState.stepIndex === 5 && (
+        <Joyride
+          styles={{
+            options: {
+              zIndex: 99999,
+            },
+          }}
+          locale={{
+            next: '下一步',
+            skip: '不再显示',
+            back: '上一步',
+            last: '完成',
+          }}
+          zIndex={1000}
+          steps={stepState.lastConfigNetSteps}
+          continuous={true}
+          showSkipButton={true} // 显示跳过按钮
+          disableCloseOnEsc={true} // 按ESC关闭
+          disableOverlayClose={true} // 禁用遮罩层关闭
+          run={true}
+          callback={handleStepCallback}
+        />
+      )}
     </Box>
   );
 };

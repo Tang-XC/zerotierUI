@@ -94,6 +94,7 @@ const Header: FC<Props> = (props: Props) => {
                     }}
                     className={classNames({
                       activeMenuItem: location.pathname === item.path,
+                      'step-one': item.path === '/network',
                     })}
                     onClick={() => {
                       handleNavigate(item.path);

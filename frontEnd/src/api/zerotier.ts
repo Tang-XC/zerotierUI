@@ -75,9 +75,9 @@ export function UpdateMemberActiveBridPge(networkID:string,id:string,data:any):P
     data
   })
 }
-export function DeleteMember(id:string):Promise<ResponseData> {
+export function DeleteMember(id:string,memberId:string):Promise<ResponseData> {
   return request({
-    url: "/controller/member/" + id,
+    url: "/controller/networki/" + id + '/member/' + memberId + '/delete',
     method: "delete",
   })
 }

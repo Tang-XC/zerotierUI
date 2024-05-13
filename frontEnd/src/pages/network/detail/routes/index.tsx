@@ -13,11 +13,12 @@ import {
 } from '@mui/material';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { getRoutesList, createRoute, deleteRoute } from '@/api/zerotier';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useImperativeHandle } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useMessage } from '@/contexts/messageContext';
 
-const Routes = () => {
+const Routes = (props: any) => {
+  const { actionRef } = props;
   const params = useLocation().state;
   const columns = [
     {
@@ -105,6 +106,15 @@ const Routes = () => {
       getData();
     }
   };
+  useImperativeHandle(
+    actionRef,
+    () => ({
+      refresh: () => {
+        getData();
+      },
+    }),
+    []
+  );
   useEffect(() => {
     getData();
   }, []);

@@ -101,8 +101,16 @@ func (i *ipPoolService) Recover(ipPool model.AddIpPool) error {
 				"ipRangeEnd":   ipPool.IpRangeEnd,
 			},
 		},
+		"routes": []interface{}{
+			map[string]interface{}{
+				"target": ipPool.CIDR,
+				"via":    nil,
+			},
+		},
+		"v4AssignMode": map[string]interface{}{
+			"zt": true,
+		},
 	}
-	fmt.Println(fmt.Sprintf("/controller/network/%s", ipPool.NetworkId))
 	_, err := i.zerotier.POST(fmt.Sprintf("/controller/network/%s", ipPool.NetworkId), data)
 	if err != nil {
 		return err

@@ -44,6 +44,7 @@ func (n *NetworkController) Detail(c *gin.Context) {
 	id := c.Param("id")
 	network, err := n.networkService.Detail(id)
 	if err != nil {
+		n.networkService.Delete(id)
 		common.FailedResponse(c, http.StatusBadRequest, err)
 		return
 	}

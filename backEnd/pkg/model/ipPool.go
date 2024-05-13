@@ -14,6 +14,7 @@ type ResponseIpPool struct {
 	IpPools IpPools `json:"ip_pools"`
 }
 type AddIpPool struct {
+	CIDR         string `json:"cidr"`
 	IpRangeStart string `json:"ip_range_start"`
 	IpRangeEnd   string `json:"ip_range_end"`
 	NetworkId    string `json:"network_id"`

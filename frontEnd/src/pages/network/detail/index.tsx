@@ -27,6 +27,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import { useMessage } from '@/contexts/messageContext';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useStepsContext } from '@/contexts/stepContext';
+import Joyride from 'react-joyride';
 import {
   hostedNetworkDetail,
   getMembershipsList,
@@ -62,6 +64,7 @@ const TabPanel: FC<TabPanelProps> = (props: TabPanelProps) => {
   );
 };
 const Detail: FC = () => {
+  const { state: stepState, dispatch } = useStepsContext();
   const [detailData, setDetailData] = useState<any>({});
   const [activeTab, setActiveTab] = useState(1);
   const [isSettingOpen, setIsSettingOpen] = useState<boolean>(false);
@@ -247,6 +250,7 @@ const Detail: FC = () => {
     // },
   ];
   const IpAssignmentRef = useRef<any>();
+  const RoutesRef = useRef<any>();
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = location.state;
@@ -256,6 +260,16 @@ const Detail: FC = () => {
     const result = await hostedNetworkDetail(id);
     if (result.code === 200) {
       setDetailData(result.data);
+    } else {
+      dispatchMessage({
+        type: 'SET_MESSAGE',
+        payload: {
+          type: 'error',
+          content: '网络不存在！',
+          delay: 5000,
+        },
+      });
+      navigate(-1);
     }
   };
   const getMembers = async () => {
@@ -316,7 +330,9 @@ const Detail: FC = () => {
           delay: 5000,
         },
       });
-      actionRef.current.reload();
+      setTimeout(() => {
+        actionRef.current.reload();
+      }, 200);
     }
   };
   const UpdateMemberActiveBridPgeData = async (nodeId: string, data: any) => {
@@ -376,6 +392,14 @@ const Detail: FC = () => {
   };
   const handleSettingCallback = () => {
     IpAssignmentRef.current.refresh();
+    RoutesRef.current.refresh();
+    window.location.reload();
+  };
+  const handleStepCallback = (data: any) => {
+    if (data.action === 'next' && data.lifecycle === 'complete') {
+      setIsSettingOpen(true);
+      stepState.stepIndex += 1;
+    }
   };
   useEffect(() => {
     getDetail();
@@ -436,7 +460,9 @@ const Detail: FC = () => {
               color="primary"
             />
           </Box>
-          <IconButton onClick={() => setIsSettingOpen(true)}>
+          <IconButton
+            className="step-five"
+            onClick={() => setIsSettingOpen(true)}>
             <SettingsIcon
               sx={{
                 color: 'primary.main',
@@ -530,7 +556,7 @@ const Detail: FC = () => {
           </TabPanel>
           <TabPanel key={2} value={activeTab} index={2}>
             <Box>
-              <Routes />
+              <Routes actionRef={RoutesRef} />
             </Box>
           </TabPanel>
           <TabPanel key={3} value={activeTab} index={3}>
@@ -647,6 +673,23 @@ const Detail: FC = () => {
           </ListItem>
         </Box>
       </Popover>
+      {stepState.isSkip && stepState.stepIndex === 4 && (
+        <Joyride
+          locale={{
+            next: '下一步',
+            skip: '不再显示',
+            back: '上一步',
+            last: '完成',
+          }}
+          steps={stepState.configNetSteps}
+          continuous={true}
+          showSkipButton={true} // 显示跳过按钮
+          disableCloseOnEsc={true} // 按ESC关闭
+          disableOverlayClose={true} // 禁用遮罩层关闭
+          run={true}
+          callback={handleStepCallback}
+        />
+      )}
     </Box>
   );
 };

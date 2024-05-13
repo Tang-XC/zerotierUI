@@ -17,6 +17,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoIcon from '@mui/icons-material/Info';
+import { useStepsContext } from '@/contexts/stepContext';
 
 import { ZTTable } from '@/components';
 import {
@@ -30,22 +31,40 @@ import { useForm, Controller } from 'react-hook-form';
 import { useMessage } from '@/contexts/messageContext';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/authContext';
+import Joyride from 'react-joyride';
 
 const Index: FC = () => {
-  const [open, setOpen] = useState(false);
   const [actionType, setActionType] = useState(0);
   const [popConfirm, setPopConfirm] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [currentId, setCurrentId] = useState('');
+  const [isStepOpen, setIsStepOpen] = useState(false);
   const form = useRef<HTMLFormElement>(null);
   const actionRef = useRef<any>();
   const { state } = useAuth();
+  const { state: stepState, dispatch } = useStepsContext();
   const columns = useMemo(() => {
     let arrs = [
       {
         title: '网络名称',
         dataIndex: 'name',
         key: 'name',
+        render: (text, record) => {
+          return (
+            <span
+              className="primary-text"
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                navigate('/network/detail', {
+                  state: {
+                    id: record.id,
+                  },
+                });
+              }}>
+              {text}
+            </span>
+          );
+        },
       },
       {
         title: '网络ID',
@@ -94,6 +113,7 @@ const Index: FC = () => {
             <Tooltip title="详情">
               <IconButton
                 type="button"
+                className="step-four"
                 disabled={!state.permissions.includes('network-detail')}
                 onClick={() => {
                   setCurrentId(record.id);
@@ -189,7 +209,7 @@ const Index: FC = () => {
     if (actionType === 0) {
       const result = await CreateNetworks(params);
       if (result.code === 200) {
-        setOpen(false);
+        onClose();
         actionRef.current?.reload();
         dispatchMessage({
           type: 'SET_MESSAGE',
@@ -203,7 +223,7 @@ const Index: FC = () => {
     } else if (actionType === 1) {
       const result = await UpdateNetworks(currentId, params);
       if (result.code === 200) {
-        setOpen(false);
+        onClose();
         actionRef.current?.reload();
         dispatchMessage({
           type: 'SET_MESSAGE',
@@ -221,8 +241,9 @@ const Index: FC = () => {
       ...params,
     });
     if (result.code === 200) {
+      console.log(result.data.networks);
       return {
-        data: result.data.networks,
+        data: result.data.networks.sort((a, b) => b.created_at - a.created_at),
       };
     }
     return {
@@ -240,11 +261,17 @@ const Index: FC = () => {
   };
   const onCreate = () => {
     setActionType(0);
-    setOpen(true);
+    dispatch({
+      type: 'SET_NETWORK_ADD_DIALOG',
+      payload: true,
+    });
   };
   const onEdit = (record: any) => {
     setActionType(1);
-    setOpen(true);
+    dispatch({
+      type: 'SET_NETWORK_ADD_DIALOG',
+      payload: true,
+    });
     reset({
       ...record,
     });
@@ -255,11 +282,25 @@ const Index: FC = () => {
       actionRef.current?.reload();
     }
   };
+  const onClose = () => {
+    dispatch({
+      type: 'SET_NETWORK_ADD_DIALOG',
+      payload: false,
+    });
+    setTimeout(() => {
+      setIsStepOpen(true);
+    }, 200);
+  };
+  const handleStepCallback = (data: any) => {
+    if (data.action === 'next' && data.lifecycle === 'complete') {
+      stepState.stepIndex += 1;
+    }
+  };
   useEffect(() => {
     getMaxMember();
   }, []);
   return (
-    <>
+    <div className="step-three">
       <ZTTable
         actionRef={actionRef}
         columns={columns}
@@ -271,9 +312,34 @@ const Index: FC = () => {
         onCreate={onCreate}
         searchMode={'simple'}
       />
-      <Dialog open={open} onClose={() => setOpen(false)} scroll="paper">
+      {stepState.isSkip && stepState.stepIndex === 3 && isStepOpen && (
+        <Joyride
+          locale={{
+            next: '下一步',
+            skip: '不再显示',
+            back: '上一步',
+            last: '完成',
+          }}
+          steps={stepState.openNetSteps}
+          continuous={true}
+          showSkipButton={true} // 显示跳过按钮
+          disableCloseOnEsc={true} // 按ESC关闭
+          disableOverlayClose={true} // 禁用遮罩层关闭
+          run={true}
+          callback={handleStepCallback}
+        />
+      )}
+      <Dialog
+        style={{
+          zIndex: 10,
+        }}
+        className="step-three"
+        open={stepState.networkAddDialog}
+        onClose={() => onClose()}
+        scroll="paper">
         <DialogTitle>{actionType === 0 ? '添加' : '编辑'}</DialogTitle>
         <DialogContent
+          className="step-three"
           sx={{
             width: '500px',
           }}>
@@ -341,7 +407,7 @@ const Index: FC = () => {
         <DialogActions>
           <Button
             onClick={() => {
-              setOpen(false);
+              onClose();
             }}>
             取消
           </Button>
@@ -388,7 +454,7 @@ const Index: FC = () => {
           </Button>
         </DialogActions>
       </Popover>
-    </>
+    </div>
   );
 };
 export default Index;
